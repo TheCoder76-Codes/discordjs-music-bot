@@ -3,11 +3,8 @@ const { MessageEmbed } = require('discord.js')
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('ping')
-		.setDescription('pong')
-		.addIntegerOption((option) =>
-			option.setName('option').setDescription('option').setRequired(true)
-		),
+		.setName('stop')
+		.setDescription('Stops the current song and clears the queue.'),
 	async execute(interaction) {
 		let client = interaction.client
 		let player = client.player
@@ -51,6 +48,24 @@ module.exports = {
 
 		await interaction.deferReply()
 
-		// Code goes here
+		try {
+			queue.destroy(false)
+		} catch (e) {
+			console.error(e)
+			return await interaction.reply({
+				embeds: [
+					new MessageEmbed()
+						.setColor('#FF0000')
+						.setTitle('❌ | I was unable to stop the music!'),
+				],
+			})
+		}
+		return await interaction.followUp({
+			embeds: [
+				new MessageEmbed()
+					.setColor('#ea4e82')
+					.setTitle('✅ | I stopped the music!'),
+			],
+		})
 	},
 }
