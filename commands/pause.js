@@ -52,7 +52,7 @@ module.exports = {
 			queue.setPaused(true)
 		} catch (error) {
 			console.error(error)
-			return await interaction.reply({
+			return await interaction.editReply({
 				embeds: [
 					new MessageEmbed()
 						.setColor('#FF0000')

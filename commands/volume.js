@@ -55,8 +55,8 @@ module.exports = {
 		}
 
 		// verify vc connection
-		if (!queue.connection || !queue.playing) {
-			return await interaction.reply({
+		if (!queue || !queue.connection || !queue.playing) {
+			return await interaction.editReply({
 				embeds: [
 					new MessageEmbed()
 						.setColor('#FF0000')

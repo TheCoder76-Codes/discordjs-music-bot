@@ -53,7 +53,51 @@ player.on('trackStart', (queue, track) => {
 		.setTitle('🎶 | Now Playing')
 		.setThumbnail(track.thumbnail)
 		.setDescription(`Now Playing ${track.title}`)
+		.setAuthor({
+			name: track.requestedBy.username,
+			iconURL: track.requestedBy.avatarURL(),
+		})
 	queue.metadata.channel.send({ embeds: [songEmbed] })
+})
+
+player.on('channelEmpty', (queue) => {
+	queue.metadata.channel.send({
+		embeds: [
+			new MessageEmbed()
+				.setColor('#FF0000')
+				.setTitle('❌ | Channel Empty')
+				.setDescription('I left the voice channel since it was empty!'),
+		],
+	})
+	queue.destroy(true)
+})
+
+player.on('queueEnd', (queue) => {
+	queue.metadata.channel.send({
+		embeds: [
+			new MessageEmbed()
+				.setColor('#ea4e82')
+				.setTitle('🛑 | Queue Finished Playing')
+				.setDescription(
+					'I left the voice channel since the queue finished playing!'
+				),
+		],
+	})
+	queue.destroy(true)
+})
+
+player.on('error', (queue, error) => {
+	console.error(error)
+	// queue.metadata.channel.send({
+	// 	embeds: [
+	// 		new MessageEmbed()
+	// 			.setColor('#FF0000')
+	// 			.setTitle(':no_entry_sign: | Error')
+	// 			.setDescription(
+	// 				'An unexpected error occured. \n Error: ```' + error + '```'
+	// 			),
+	// 	],
+	// })
 })
 
 client.once('ready', () => {
@@ -73,9 +117,8 @@ client.on('interactionCreate', async (interaction) => {
 		await command.execute(interaction)
 	} catch (error) {
 		console.error(error)
-		await interaction.reply({
+		await interaction.channel.send({
 			content: 'There was an error while executing this command!',
-			ephemeral: true,
 		})
 	}
 })

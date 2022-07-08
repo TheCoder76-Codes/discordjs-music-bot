@@ -35,7 +35,7 @@ module.exports = {
 				ephemeral: true,
 			})
 
-		if (!queue.connection || !queue.playing) {
+		if (!queue.connection || !queue.playing || !queue) {
 			return await interaction.reply({
 				embeds: [
 					new MessageEmbed()
@@ -52,7 +52,7 @@ module.exports = {
 			queue.setPaused(false)
 		} catch (error) {
 			console.error(error)
-			return await interaction.reply({
+			return await interaction.editReply({
 				embeds: [
 					new MessageEmbed()
 						.setColor('#FF0000')

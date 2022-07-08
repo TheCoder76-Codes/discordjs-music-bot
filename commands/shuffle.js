@@ -1,10 +1,11 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
+const { QueryType } = require('discord-player')
 const { MessageEmbed } = require('discord.js')
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('stop')
-		.setDescription('Stops the current song and clears the queue.'),
+		.setName('shuffle')
+		.setDescription('Shuffles the queue'),
 	async execute(interaction) {
 		let client = interaction.client
 		let player = client.player
@@ -49,22 +50,24 @@ module.exports = {
 		await interaction.deferReply()
 
 		try {
-			queue.destroy(true)
-		} catch (e) {
-			console.error(e)
+			queue.shuffle()
+		} catch (error) {
+			console.error(error)
 			return await interaction.editReply({
 				embeds: [
 					new MessageEmbed()
 						.setColor('#FF0000')
-						.setTitle('❌ | I was unable to stop the music!'),
+						.setTitle('❌ | I was unable to shuffle the queue!'),
 				],
+				ephemeral: true,
 			})
 		}
+
 		return await interaction.followUp({
 			embeds: [
 				new MessageEmbed()
 					.setColor('#ea4e82')
-					.setTitle('✅ | I stopped the music!'),
+					.setTitle('🔀 | Shuffled the queue!'),
 			],
 		})
 	},

@@ -3,8 +3,20 @@ const { MessageEmbed } = require('discord.js')
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('stop')
-		.setDescription('Stops the current song and clears the queue.'),
+		.setName('repeat')
+		.setDescription('Set the repeat mode')
+		.addIntegerOption((option) =>
+			option
+				.setName('mode')
+				.setDescription('The repeat mode')
+				.setRequired(true)
+				.addChoices(
+					{ name: 'Off', value: 0 },
+					{ name: 'Song', value: 1 },
+					{ name: 'Queue', value: 2 },
+					{ name: 'Autoplay', value: 3 }
+				)
+		),
 	async execute(interaction) {
 		let client = interaction.client
 		let player = client.player
@@ -49,22 +61,24 @@ module.exports = {
 		await interaction.deferReply()
 
 		try {
-			queue.destroy(true)
-		} catch (e) {
-			console.error(e)
+			await queue.setRepeatMode(interaction.options.getInteger('mode'))
+		} catch (error) {
+			console.log(error)
 			return await interaction.editReply({
 				embeds: [
 					new MessageEmbed()
 						.setColor('#FF0000')
-						.setTitle('❌ | I was unable to stop the music!'),
+						.setTitle('❌ | I could not set the repeat mode!'),
 				],
+				ephemeral: true,
 			})
 		}
-		return await interaction.followUp({
+
+		return await interaction.editReply({
 			embeds: [
 				new MessageEmbed()
 					.setColor('#ea4e82')
-					.setTitle('✅ | I stopped the music!'),
+					.setTitle('✅ | Repeat mode set!'),
 			],
 		})
 	},

@@ -1,5 +1,4 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
-const { QueryType } = require('discord-player')
 const { MessageEmbed } = require('discord.js')
 
 module.exports = {
@@ -39,7 +38,7 @@ module.exports = {
 				ephemeral: true,
 			})
 
-		if (!queue.connection || !queue.playing) {
+		if (!queue || !queue.connection || !queue.playing) {
 			return await interaction.reply({
 				embeds: [
 					new MessageEmbed()

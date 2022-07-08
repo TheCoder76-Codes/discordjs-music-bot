@@ -1,10 +1,11 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
+const { QueryType } = require('discord-player')
 const { MessageEmbed } = require('discord.js')
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('stop')
-		.setDescription('Stops the current song and clears the queue.'),
+		.setName('now-playing')
+		.setDescription('Shows the song currently playing'),
 	async execute(interaction) {
 		let client = interaction.client
 		let player = client.player
@@ -48,24 +49,33 @@ module.exports = {
 
 		await interaction.deferReply()
 
+		let embed = new MessageEmbed()
+
 		try {
-			queue.destroy(true)
-		} catch (e) {
-			console.error(e)
+			let track = queue.nowPlaying()
+			embed
+				.setColor('#ea4e82')
+				.setTitle('🎶 | Now Playing')
+				.setThumbnail(track.thumbnail)
+				.setDescription(`Now Playing ${track.title}`)
+				.setAuthor({
+					name: track.requestedBy.username,
+					iconURL: track.requestedBy.avatarURL(),
+				})
+		} catch (error) {
+			console.log(error)
 			return await interaction.editReply({
 				embeds: [
 					new MessageEmbed()
 						.setColor('#FF0000')
-						.setTitle('❌ | I was unable to stop the music!'),
+						.setTitle('❌ | I cannot get the current song!'),
 				],
+				ephemeral: true,
 			})
 		}
+
 		return await interaction.followUp({
-			embeds: [
-				new MessageEmbed()
-					.setColor('#ea4e82')
-					.setTitle('✅ | I stopped the music!'),
-			],
+			embeds: [embed],
 		})
 	},
 }

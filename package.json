@@ -1,20 +1,20 @@
 {
-  "name": "discordjs-music-bot",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@discordjs/opus": "^0.8.0",
-    "@discordjs/rest": "^0.5.0",
-    "discord-player": "^5.2.2",
-    "discord.js": "^13.8.1",
-    "dotenv": "^16.0.1",
-    "ffmpeg-static": "^4.4.1"
-  }
+	"name": "discordjs-music-bot",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "nodemon ."
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@discordjs/opus": "^0.8.0",
+		"@discordjs/rest": "^0.5.0",
+		"discord-player": "^5.2.2",
+		"discord.js": "^13.8.1",
+		"dotenv": "^16.0.1",
+		"ffmpeg-static": "^4.4.1"
+	}
 }

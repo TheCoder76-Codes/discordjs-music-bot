@@ -3,8 +3,8 @@ const { MessageEmbed } = require('discord.js')
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('stop')
-		.setDescription('Stops the current song and clears the queue.'),
+		.setName('previous')
+		.setDescription('Plays the previous song in the queue'),
 	async execute(interaction) {
 		let client = interaction.client
 		let player = client.player
@@ -49,22 +49,27 @@ module.exports = {
 		await interaction.deferReply()
 
 		try {
-			queue.destroy(true)
-		} catch (e) {
-			console.error(e)
+			queue.addTrack(
+				queue.previousTracks[queue.previousTracks.length - 1]
+			)
+			queue.play(queue.previousTracks[queue.previousTracks.length - 2], {
+				immediate: true,
+			})
+		} catch (error) {
+			console.log(error)
 			return await interaction.editReply({
 				embeds: [
 					new MessageEmbed()
 						.setColor('#FF0000')
-						.setTitle('❌ | I was unable to stop the music!'),
+						.setTitle('❌ | I could not play the previous song!'),
 				],
 			})
 		}
-		return await interaction.followUp({
+		interaction.followUp({
 			embeds: [
 				new MessageEmbed()
 					.setColor('#ea4e82')
-					.setTitle('✅ | I stopped the music!'),
+					.setTitle('🎶 | Playing previous track!'),
 			],
 		})
 	},

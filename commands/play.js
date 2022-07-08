@@ -71,6 +71,20 @@ module.exports = {
 			})
 		}
 
+		if (
+			(!query || query === '') &&
+			(!queue || !queue.connection || !queue.playing)
+		) {
+			return await interaction.reply({
+				embeds: [
+					new MessageEmbed()
+						.setColor('#FF0000')
+						.setTitle('❌ | I am not playing anything!'),
+				],
+				ephemeral: true,
+			})
+		}
+
 		// verify vc connection
 		try {
 			if (!queue.connection)
@@ -78,7 +92,7 @@ module.exports = {
 		} catch (error) {
 			queue.destroy()
 			console.error(error)
-			return await interaction.reply({
+			return await interaction.editReply({
 				embeds: [
 					new MessageEmbed()
 						.setColor('#FF0000')
